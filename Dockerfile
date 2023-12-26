@@ -1,21 +1,20 @@
-# Menggunakan Base Image Ubuntu versi 20.04
-FROM ubuntu:20.04
+# Gunakan base image Ubuntu
+FROM ubuntu:latest
 
-# Menginstall git untuk mengunduh file dari gitHub dan nginx agar dapat menjalankan aplikasi web
-RUN apt-get update && \
-    apt-get install -y git nginx
+# Install dependencies
+RUN apt-get update -y && \
+    apt-get install -y git python3 && \
+    apt-get install -y git && \
+    apt-get clean
 
-# Direktori container
+# Clone repo dari GitHub
+RUN git clone https://github.com/MuhammadRaihanAssidiqi/CapstoneCloud-195410172.git /app
+
+# Set working directory
 WORKDIR /app
 
-# Unduh file dari GitHub
-RUN git clone https://github.com/MuhammadRaihanAssidiqi/CapstoneCloud-195410172.git .
-
-# Menyalin file konfigurasi nginx
-COPY nginx.conf /etc/nginx/sites-available/default
-
-# Expose port untuk nginx
+# Expose port 80
 EXPOSE 80
 
-# Perintah yang akan dijalankan saat container berjalan
-CMD ["nginx", "-g", "daemon off;"]
+# Perintah untuk menjalankan aplikasi
+CMD ["bash", "-c", "echo 'Hello Docker!' > index.html && python3 -m http.server 80"]
