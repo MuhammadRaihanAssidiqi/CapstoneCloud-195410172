@@ -1,20 +1,21 @@
-# Gunakan base image Ubuntu
-FROM ubuntu:latest
+# Gunakan base image Nginx
+FROM nginx:latest
 
-# Install dependencies
-RUN apt-get update -y && \
-    apt-get install -y git python3 && \
-    apt-get install -y git && \
-    apt-get clean
+# Install Git
+RUN apt-get update && \
+    apt-get install -y git
 
-# Clone repo dari GitHub
-RUN git clone https://github.com/MuhammadRaihanAssidiqi/CapstoneCloud-195410172.git /app
+# Pilih direktori kerja
+WORKDIR /usr/share/nginx/html
 
-# Set working directory
-WORKDIR /app
+# Hapus semua file dan direktori yang ada di direktori kerja
+RUN rm -rf /usr/share/nginx/html/*
 
-# Expose port 80
+# Clone repositori Git ke dalam direktori kerja
+RUN git clone https://github.com/MuhammadRaihanAssidiqi/CapstoneCloud-195410172.git .
+
+# Ekspos port 80 untuk Nginx
 EXPOSE 80
 
-# Perintah untuk menjalankan aplikasi
-CMD ["bash", "-c", "echo 'Hello Docker!' > index.html && python3 -m http.server 80"]
+# CMD untuk memulai Nginx dalam mode daemon
+CMD ["nginx", "-g", "daemon off;"]
